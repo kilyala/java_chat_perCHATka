@@ -27,7 +27,6 @@ public class DatabaseUsers {
         databaseUsers.insertNewUserPS("testLps", "testPps", "testNps");
         databaseUsers.userSearch();
         databaseUsers.dropTable();
-
     }
 
     public void createTable() throws SQLException {
@@ -64,7 +63,6 @@ public class DatabaseUsers {
                     resultSet.getString(2) + " " +
                     resultSet.getString(3));
         }
-
     }
 
     public void dropTable() throws SQLException {

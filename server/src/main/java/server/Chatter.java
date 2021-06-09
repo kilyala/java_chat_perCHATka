@@ -1,5 +1,9 @@
 package server;
 
+
+//это заготовка была, удалять не стал, пока не пригодилась
+
+
 public class Chatter {
     private final String login;
     private final String password;
