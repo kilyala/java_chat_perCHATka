@@ -45,7 +45,7 @@ public class ClientHandler {
                             if (token.length < 3) {
                                 continue;
                             }
-                            String newNick = server.getAuthService()
+                            String newNick = server.getDatabaseAuthService()
                                     .getNicknameByLoginAndPassword(token[1], token[2]);
                             login = token[1];
 

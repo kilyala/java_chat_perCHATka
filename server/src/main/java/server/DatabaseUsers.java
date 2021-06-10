@@ -18,7 +18,7 @@ public class DatabaseUsers {
         }
     }
 
-    public static void main(String[] args) throws SQLException {
+    public static void init() throws SQLException {
         DatabaseUsers databaseUsers = new DatabaseUsers();
         databaseUsers.createTable();
         databaseUsers.insertNewUser("testL", "testP", "testN");
@@ -65,7 +65,7 @@ public class DatabaseUsers {
         }
     }
 
-    public void dropTable() throws SQLException {
+    public static void dropTable() throws SQLException {
         String dropSql = "drop table chatUsers";
         statement.execute(dropSql);
     }

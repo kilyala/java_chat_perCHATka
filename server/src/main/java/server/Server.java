@@ -4,9 +4,11 @@ import commands.Command;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -19,15 +21,29 @@ public class Server {
 
     private List<ClientHandler> clients;
     private AuthService authService;
+    private DatabaseUsers databaseUsers;
+    private DatabaseAuthService databaseAuthService;
 
     public Server() {
         clients = new CopyOnWriteArrayList<>();
-        authService = new SimpleAuthService();
+        authService = new DatabaseAuthService();
+        databaseUsers = new DatabaseUsers();
+
+
+        try {
+            File file = new File("usersdb.db");
+            if(file.exists()) {
+                System.out.println("The database with this name exists\n");
+            } else {
+                DatabaseUsers.init();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         try{
             server = new ServerSocket(PORT);
             System.out.println("Server started");
-
 
             while (true) {
                 socket = server.accept();
@@ -47,6 +63,12 @@ public class Server {
             try {
                 server.close();
             } catch (IOException e) {
+                e.printStackTrace();
+            }
+//            close database
+            try {
+                DatabaseUsers.dropTable();
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
@@ -83,6 +105,10 @@ public class Server {
 
     public AuthService getAuthService() {
         return authService;
+    }
+
+    public DatabaseAuthService getDatabaseAuthService() {
+        return databaseAuthService;
     }
 
     public boolean isLoginAuthenticated(String login) {
