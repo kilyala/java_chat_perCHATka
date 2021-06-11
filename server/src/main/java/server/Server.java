@@ -22,11 +22,10 @@ public class Server {
     private List<ClientHandler> clients;
     private AuthService authService;
     private DatabaseUsers databaseUsers;
-    private DatabaseAuthService databaseAuthService;
 
     public Server() {
         clients = new CopyOnWriteArrayList<>();
-        authService = new DatabaseAuthService();
+        authService = new SimpleAuthService();
         databaseUsers = new DatabaseUsers();
 
 
@@ -35,7 +34,7 @@ public class Server {
             if(file.exists()) {
                 System.out.println("The database with this name exists\n");
             } else {
-                DatabaseUsers.init();
+                databaseUsers.init();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -65,19 +64,12 @@ public class Server {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//            close database
-            try {
-                DatabaseUsers.dropTable();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
     public void broadcastMsg(ClientHandler sender,String msg) {
         String message = String.format("[ %s ]: %s", sender.getNickname(), msg);
         for (ClientHandler c : clients) {
             c.sendMsg(message);
-            
         }
     }
 
@@ -86,7 +78,6 @@ public class Server {
         for (ClientHandler c : clients) {
             if(c.getNickname().equals(receiver)) {
                 c.sendMsg(message);
-
                 return;
             }
         }
@@ -107,8 +98,8 @@ public class Server {
         return authService;
     }
 
-    public DatabaseAuthService getDatabaseAuthService() {
-        return databaseAuthService;
+    public DatabaseUsers getDatabaseUsers() {
+        return databaseUsers;
     }
 
     public boolean isLoginAuthenticated(String login) {

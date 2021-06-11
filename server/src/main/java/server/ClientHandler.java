@@ -32,6 +32,7 @@ public class ClientHandler {
                     // цикл аутентификации
                     while (true) {
                         String str = in.readUTF();
+                        System.out.println("ClientHandler in.readUTF() = " + str);
 
                         // если команда отключиться
                         if (str.equals(Command.END)) {
@@ -45,11 +46,12 @@ public class ClientHandler {
                             if (token.length < 3) {
                                 continue;
                             }
-                            String newNick = server.getDatabaseAuthService()
-                                    .getNicknameByLoginAndPassword(token[1], token[2]);
+                            String newNick = server.getDatabaseUsers().getNickname(token[1], token[2]);
                             login = token[1];
+                            System.out.println("ClientHandler login=" + login);
 
                             if (newNick != null) {
+                                System.out.println("newNick != null");
                                 if (!server.isLoginAuthenticated(login)) {
                                     nickname = newNick;
                                     sendMsg(Command.AUTH_OK + " " + nickname);
@@ -72,16 +74,15 @@ public class ClientHandler {
                             if (token.length < 4) {
                                 continue;
                             }
-                            boolean regSuccess = server.getAuthService()
-                                    .registration(token[1], token[2], token[3]);
+                            boolean regSuccess = server.getDatabaseUsers().insertNewUserPS(token[1], token[2], token[3]);
                             if (regSuccess) {
                                 sendMsg(Command.REG_OK);
                             } else {
                                 sendMsg(Command.REG_NON);
                             }
-
                         }
                     }
+
                     // цикл работы
                     while (true) {
                         String str = in.readUTF();
