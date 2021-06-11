@@ -37,12 +37,6 @@ public class DatabaseUsers {
         statement.execute(createTable);
     }
 
-//    public void createTable() throws SQLException {
-//        String createTable = "create table chatUsers (login text not null, " +
-//                "password text not null, " +
-//                "nickname text not null)";
-//        statement.execute(createTable);
-//    }
 
     public void insertNewUser(String login, String password, String nickname) throws SQLException {
         String insertSql = "insert into chatUsers (login, password, nickname) values ('" +login+ "', " +
